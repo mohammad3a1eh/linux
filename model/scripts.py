@@ -2,24 +2,45 @@ from playsound import playsound
 import subprocess
 from model.config import *
 import random
+from os import system
+from pyttsx3 import init
 
-types = {
-"end" : ["box sound"],
-"yes" : ["yes siree"],
-"oh" : ['oow nice'],
-"accept" : ["oow okay" ,"that's okay" , "oow yeah can do" ,"oow yes, yes man"],
-"success" : ["all done"],
-"unsuccess" : ['oowhh', "come on"],    
+roles = {
+    "ok" : [
+        ""
+    ],
+    "error" : [
+        
+    ],
+    "start" : [
+        
+    ],
+    "oh" : [
+        
+    ]
 }
 
-def play_text(text):
-    subprocess.run(['flite','-t', text, '--setf', f'duration_stretch={DURATION_STRETCH}'])
 
-def play(type):
-    audio = random.choice(types[type])
-    file_path = f"{PATH_RESOURCE}/{audio}.wav"
-    playsound(file_path)
+def play(text):
+    e = init()
+    voices = e.getProperty('voices')
+    e.setProperty("rate", 200) 
+    e.setProperty("voice", voices[12].id)  # set english
+    e.say(text)
+    e.runAndWait()
+    
+def play_role(role):
+    text = random.choice(roles[role])
+    e = init()
+    voices = e.getProperty('voices')
+    e.setProperty("rate", 200) 
+    e.setProperty("voice", voices[12].id)  # set english
+    e.say(text)
+    e.runAndWait()
     
 def log(text):
     if SHOW_RESULT:
         print(text)
+        
+def sudo_env(command):
+    system(f"echo {SYSTEM_PASSWORD} | sudo -S {command}")

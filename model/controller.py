@@ -1,8 +1,10 @@
 import time
 from model.config import SLEEP_TIME
 from model.scripts import play
+from model.actions import *
 from os import system
 from pyautogui import keyDown, keyUp, press
+from threading import Thread as thread
 
 keys = ['\t', '\n', '\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(',
 ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7',
@@ -42,26 +44,22 @@ def controller(value, start_time):
     # action bluetooth
      
     elif "blue" and "start" in value:
-        play("accept")
-        system("sudo systemctl start bluetooth")
-        play("success")
+        sudo_env("systemctl start bluetooth")
+        return False
     elif "blue" and "stop" in value:
-        play("accept")
-        system("sudo systemctl stop bluetooth")
-        play("success")
+        sudo_env("systemctl stop bluetooth")
+        return False
         
     
+    # show desktop
     
     elif "show" in value:
-        # show desktop
+        _ = thread(target=show_, args=(value))
+        _.start()
+        return False
         
-        if "desktop" in value:
-            keyDown("win")
-            press("d")
-            keyUp("win")
             
          
-    
     # move and go to workspace
     
     elif "go" and "windows" and "up" in value:
@@ -104,22 +102,20 @@ def controller(value, start_time):
         keyUp("win")
     
     elif "open" or "run" or "launch" in value:
-        
-        # run terminal
-        
-        if "terminal" in value:
-            keyDown("ctrl")
-            keyDown("alt")
-            press("t")
-            keyUp("ctrl")
-            keyUp("alt")
+        _ = thread(target=luncher, args=(value))
+        _.start()
+        return False
             
-        # run browser
-        
-        elif "browser" in value:
-            keyDown("ctrl")
-            keyDown("alt")
-            press("w")
-            keyUp("ctrl")
-            keyUp("alt")
+    # type with voice
             
+    elif value.split(" ")[0] == "type":
+        _ = thread(target=typer, args=(value))
+        _.start()
+        return False
+        
+    # search with voice
+    
+    elif value.split(" ")[0:2] == "search google":
+        _ = thread(target=s_google, args=(value))
+        _.start()
+        return False
