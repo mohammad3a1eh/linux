@@ -1,9 +1,8 @@
 import time
 from model.config import SLEEP_TIME
-from model.scripts import play
+from model.scripts import log
 from model.actions import *
-from os import system
-from pyautogui import keyDown, keyUp, press
+from pyautogui import press
 from threading import Thread as thread
 
 keys = ['\t', '\n', '\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(',
@@ -31,91 +30,61 @@ keys = ['\t', '\n', '\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(',
 
 
 def controller(value, start_time):
-    print(value)
+    log(f"[LOG] {value}")
     if (time.time() - start_time) > SLEEP_TIME:
-        play("end")
-        print("sleeped")
         return False
-    elif "sleep" and "snow" and "boy" in value:
-        play("unsuccess")
-        print("sleeped")
+    elif "sleep" in value and "now" in value:
         return False   
     
-    # action bluetooth
-     
-    elif "blue" and "start" in value:
-        sudo_env("systemctl start bluetooth")
-        return False
-    elif "blue" and "stop" in value:
-        sudo_env("systemctl stop bluetooth")
-        return False
-        
+    elif "system" in value[:6]:
+        _ = thread(target=systemctl, args=(value,))
+        _.start()
     
     # show desktop
     
     elif "show" in value:
-        _ = thread(target=show_, args=(value))
+        _ = thread(target=show_, args=(value,))
         _.start()
-        return False
         
-            
-         
+    elif "check" in value and "internet" in value or "internet" in value and "connection" in value:
+        _ = thread(target=check_connection)
+        _.start()
+
     # move and go to workspace
     
-    elif "go" and "windows" and "up" in value:
-        play("accept")
-        keyDown("alt")
-        keyDown("ctrl")
-        press("up")
-        keyUp("alt")
-        keyUp("ctrl")    
-    elif "go" and "windows" and "down" in value:
-        keyDown("alt")
-        play("accept")
-        keyDown("ctrl")
-        press("down")
-        keyUp("alt")
-        keyUp("ctrl")
-    elif "go" and "windows" and "right" in value:
-        play("accept")
-        keyDown("alt")
-        keyDown("ctrl")
-        press("right")
-        keyUp("alt")
-        keyUp("ctrl")    
-    elif "go" and "windows" and "left" in value:
-        play("accept")
-        keyDown("alt")
-        keyDown("ctrl")
-        press("left")
-        keyUp("alt")
-        keyUp("ctrl")
+    elif "window" in value or "go to" in value:
+        _ = thread(target=mv_windows, args=(value,))
+        _.start()    
        
     # take a screenshoot
     
-    elif "screen" and "shot" in value:
-        press("prtscr")
-        
-    elif "lock" and "screen" or "computer" or "system" in value:
-        keyDown("win")
-        press("l")
-        keyUp("win")
+    elif "screen" in value and "shot" in value:
+        _ = thread(target=press, args=("prtscr",))
+        _.start()
     
-    elif "open" or "run" or "launch" in value:
-        _ = thread(target=luncher, args=(value))
+    
+    elif "open" in value or "run" in value or "launch" in value:
+        _ = thread(target=luncher, args=(value,))
         _.start()
-        return False
+
             
-    # type with voice
-            
-    elif value.split(" ")[0] == "type":
-        _ = thread(target=typer, args=(value))
+    # type with voice 
+    
+    elif "type" in value[:4]:
+        _ = thread(target=typer, args=(value,))   
         _.start()
-        return False
+
         
     # search with voice
     
-    elif value.split(" ")[0:2] == "search google":
-        _ = thread(target=s_google, args=(value))
+    elif "search google" in value[:13]:
+        _ = thread(target=s_google, args=(value,))
         _.start()
-        return False
+        
+    elif "where is" in value:
+        _ = thread(target=where_is, args=(value,))
+        _.start()
+        
+    elif "search youtube" in value[:14]:
+        _ = thread(target=s_youtube, args=(value,))
+        _.start()

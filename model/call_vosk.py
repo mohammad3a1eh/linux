@@ -4,12 +4,11 @@ import pyaudio
 import json
 from model.controller import controller
 import time
-from model.scripts import play
+from model.scripts import sui
 
 
 
 def assis():
-    play("yes")
     stt = time.time()
     print(stt)
     model = Model(PATH_VOSK)
@@ -19,6 +18,7 @@ def assis():
     stream = cap.open(format=pyaudio.paInt16, channels=1,
                         rate=48000, input=True, frames_per_buffer=4096)
     stream.start_stream()
+    sui("active")
     while True:
         result = None
         stream_value = stream.read(4096)
@@ -29,3 +29,5 @@ def assis():
             _ = controller(result, stt)
             if not _:
                 break
+            
+    sui("sleep")

@@ -1,3 +1,0 @@
-PyAudio==0.2.9
-scipy==1.2.3
-pyttx3==2.9
