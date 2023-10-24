@@ -7,7 +7,5 @@ detector = False
 detector = snowboydecoder.HotwordDetector(MODEL, sensitivity=SENSITIVITY)
 detector.start(
     detected_callback= assis,
-    # interrupt_check= ,
-    # sleep_time= ,
 )
 detector.terminate()

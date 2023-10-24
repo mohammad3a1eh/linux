@@ -1,16 +1,15 @@
-from pyautogui import typewrite
 from webbrowser import open_new_tab
-from pyautogui import keyDown, keyUp, press
-from os import system
-from model.scripts import sudo_env,say
+from pyautogui import keyDown, keyUp, press, typewrite
+from model.scripts import sudo_env,say,notif_send
 import requests
+from persiantools.jdatetime import JalaliDateTime
 
 
 
 def check_connection():
     try:
         _ = requests.head('https://www.google.com/', timeout=5)
-        say("i think you are connected")
+        say("i think you are ,connected")
     except requests.ConnectionError:
         say("i think you are not connected")
 
@@ -123,4 +122,10 @@ def mv_windows(value):
         press("left")
         keyUp("alt")
         keyUp("ctrl")
+    
+def date():
+    date = JalaliDateTime.today().ctime()
+
+    notif_send("personal voice assistant",f"today is {date}")
+    
     
