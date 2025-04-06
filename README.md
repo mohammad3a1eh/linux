@@ -23,6 +23,21 @@ with python language
  a assistant for linux
 
 
+# Setup
+```zsh
+sudo apt-get install libasound2-plugins libasound2-python libsox-fmt-all
+sudo apt-get install sox
+
+apt-get install swig
+
+sudo apt-get install libopenblas-dev
+
+# before install pyaudio in debian/ubuntu
+# https://stackoverflow.com/a/75982213
+sudo apt-get install python3-dev python3-pip portaudio19-dev
+
+sudo apt install vlc
+```
 
 ### commands:
 
