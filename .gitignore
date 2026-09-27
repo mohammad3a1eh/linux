@@ -1,1 +1,8 @@
 .idea/
+models/
+__pycache__/
+**/__pycache__/
+.env
+venv/
+*.pyc
+.opencode/
