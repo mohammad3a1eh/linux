@@ -1,0 +1,30 @@
+# Headless daemon — notifications via libnotify-bin (notify-send)
+
+# Voice assistant stack
+semantic-router>=0.1.10
+# torch from CPU wheel: pip install --index-url https://download.pytorch.org/whl/cpu torch
+torch>=2.5
+transformers>=4.45
+python-dotenv>=1.0
+# openwakeword==0.6.0 is NOT listed here — it requires `tflite-runtime` which has
+# no Python >= 3.13 wheels. Install it separately with --no-deps (see README).
+vosk>=0.3.45
+psutil>=6.1.0
+
+# Deep learning backend for openwakeword
+onnxruntime>=1.20.0
+
+# Hardware audio interface (Sounddevice) for wake word model groups
+sounddevice>=0.5.1
+
+# Text-to-Speech (Piper)
+piper-tts>=1.2.0
+
+# Prompt injection for local LLMs (Ollama, etc.)
+ollama>=0.4.0
+
+# openwakeword's transitive deps (installed manually to bypass tflite-runtime)
+scipy>=1.10
+scikit-learn>=1.5
+requests>=2.31
+tqdm>=4.66
