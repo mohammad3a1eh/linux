@@ -39,3 +39,60 @@ my_assistant/
     ├── icons/              # Application and UI icons (SVG)
     └── sounds/             # Sound effects (e.g., wake word activation chime)
 ```
+
+## Installation & Setup
+
+### 1. System dependencies (Debian)
+
+```bash
+sudo apt install \
+    python3-venv \
+    python3-gi \
+    python3-gi-cairo \
+    gir1.2-gtk-4.0 \
+    gir1.2-adw-1 \
+    libcairo2-dev \
+    libgirepository1.0-dev \
+    portaudio19-dev \
+    libportaudio2
+```
+
+- `python3-venv` — virtual environments.
+- `python3-gi`, `python3-gi-cairo` — PyGObject (GObject Introspection 3.x and its Cairo bindings).
+- `gir1.2-gtk-4.0`, `gir1.2-adw-1` — GTK4 and Libadwaita GObject introspection files (required for `gi` to load the toolkits).
+- `libcairo2-dev`, `libgirepository1.0-dev` — headers needed to build/compile PyGObject and C extensions.
+- `portaudio19-dev` — headers needed to build `sounddevice` from source.
+- `libportaudio2` — runtime PortAudio library required by `sounddevice` at import time.
+
+### 2. Python virtual environment
+
+On Debian, PyGObject is a system package (`python3-gi`) and **won't build against a clean venv without extra toolchain+meson setup**. Because of this it's strongly recommended to create the venv **with `--system-site-packages`**. That keeps the system's compiled PyGObject/Cairo bindings visible inside the venv while still isolating your pip-installed packages:
+
+```bash
+# --system-site-packages is strongly recommended on Debian
+python3 -m venv --system-site-packages venv
+```
+
+Alternative (not recommended): a clean venv builds PyGObject from source and requires Ninja/Meson plus more dev headers.
+
+### 3. Activate and install requirements
+
+```bash
+# Activate
+source venv/bin/activate
+
+# Install Python packages
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# openwakeword declares tflite-runtime, which has no wheels for
+# Python >= 3.13 — so install it without deps (its runtime deps
+# are already in requirements.txt):
+pip install --no-deps openwakeword==0.6.0
+```
+
+### 4. Verify
+
+```bash
+python -c "import gi; gi.require_version('Gtk','4.0'); gi.require_version('Adw','1'); from gi.repository import Gtk, Adw; print('GTK4+Adw OK')"
+```
